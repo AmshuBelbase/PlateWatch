@@ -5,7 +5,14 @@ import os
 import shutil
 import cv2
 import time
+from tkinter import messagebox
 import mysql.connector
+from datetime import date
+# Get today's date
+today = date.today()
+
+# Print today's date 
+
 mydb = mysql.connector.connect(host='localhost', user='root', password='',database='epiz_32083127_traffic')
 cur =  mydb.cursor()
 harcascade = "model\haarcascade_russian_plate_number.xml"
@@ -13,8 +20,9 @@ min_area = 500
 counting = 1
 root = Tk()
 root.title('Traffic Management')
-root.iconbitmap('./model/OIP.jpg')
-root.geometry("1200x600")
+root.iconbitmap('./model/OIP.ico') 
+root.geometry('1179x627+35+10')
+root.resizable(0,0)
 
 def count_files_in_folder(folder_path, transaction_type):
     file_count = 0
@@ -64,26 +72,23 @@ def move_file(transaction_type, new_prefix, counting):
         os.path.join(source_folder, file_to_move),
         os.path.join(destination_folder, new_file_name)
     )
-    new_file_name = "fined_"+new_prefix+'_'+str(count_p)+'.jpeg'
+    new_file_name_p = "fined_"+new_prefix+'_'+str(count_p)+'.jpeg'
     shutil.move(
         os.path.join(source_folder_plate, file_to_move),
-        os.path.join(destination_folder_plate, new_file_name)
+        os.path.join(destination_folder_plate, new_file_name_p)
     )  
-
-def insert_data():
-    print()
+    return new_file_name
 
 def operate(transaction_type):
 
     # counting files
-
+    vehicle = ''
     folder_path = "penalty_vehicles/"
     file_count = count_files_in_folder(folder_path, transaction_type)
 
     if (file_count != 0):
 
-        # renaming files
-
+        # renaming files 
         new_prefix = "vehicle"
         rename_files(folder_path, new_prefix, transaction_type)
 
@@ -145,12 +150,37 @@ def operate(transaction_type):
                 texts = texts+text
                 texts = texts.replace(" ", "")
             print(texts)
-            Label(
-                root, text='Detected Number Plate of ' + new_prefix+'_'+str(counting)+'.jpeg' + ' : '+texts).pack()
-            move_file(transaction_type, new_prefix, counting)
+            new_file_name = move_file(transaction_type, new_prefix, counting)
+            f_i = t_types.index(transaction_type)
+            tt = str(options[t_types.index(transaction_type)+1])
+            f = str(fine[f_i])
+            s = "SELECT * FROM users WHERE numberplate = %s"
+            cur.execute(s, (texts,))
+            result = cur.fetchall()
+            name = ''
+            for rec in result:
+                # print(rec[1])
+                s = "INSERT INTO fines (name, email,uid, numberplate, description, type, amount, date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+                values = (rec[1], rec[2],rec[0], rec[5], new_file_name, tt, f, today) 
+                name = rec[1]
+            try:
+                cur.execute(s, values)
+                mydb.commit()
+                print("Data inserted successfully!")
+                # messagebox.showinfo("Alert", "Rec !") 
+            except Exception as e:
+                mydb.rollback()  # Rollback the transaction if there's an error
+                print(f"Error inserting data: {str(e)}")
+                # messagebox.showinfo("Alert", "Sign Up Un Successfull !")
+            vehicle += texts+' -> '+name+' || '
+        Label(root, text = vehicle).pack()
+        Label(root, text = '').pack()
+
     else:
-        print("No File in Folder")
-        Label(root, text='No File in Folder').pack()
+        print("No Vehicle Violated this Rule.")
+        Label(root, text='No Vehicle Violated this Rule.').pack()
+        Label(root, text = '').pack()
+    
 
 def selected(event):
     # mylabel = Label(root, text=clicked.get()).pack()
@@ -180,7 +210,8 @@ def selected(event):
     print(transaction_type)
     operate(transaction_type)
 
-
+fine = ["1000", "2000", "5000", "10000"]
+t_types = ["over_speed", "wrong_lane", "traffic_light", "no_parking"]
 options = [
     " -- Select -- ",
     "Over Speed",

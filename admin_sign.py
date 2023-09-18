@@ -2,12 +2,20 @@ from datetime import datetime
 from tkinter import *
 import tkinter as tk  
 from tkcalendar import Calendar
+from tkinter import messagebox
 from PIL import ImageTk
 from tkinter import ttk  
+import mysql.connector
+import random
+import string
+
+mydb = mysql.connector.connect(host='localhost', user='root', password='',database='epiz_32083127_traffic')
+cur =  mydb.cursor()
+months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 #Functions
 def on_username_enter(event):
-    if(username.get() == 'Username'):
+    if(username.get() == 'Name'):
         username.delete(0, END)
 
 def on_useraddress_enter(event):
@@ -30,17 +38,62 @@ def on_userbloodgroup_enter(event):
     if(userbloodgroup.get() == 'Blood Group'):
         userbloodgroup.delete(0, END)
 
-def update_calendar_year(event): 
-    selected_year = year_picker.get() 
-    cal = Calendar(root, year=int(selected_year), month=1, day=1, date_pattern="yyyy-mm-dd")  
-    # cal = Calendar(root, year=current_year, month=1, day=1, date_pattern="yyyy-mm-dd") 
-    cal.place(x=500, y=320)
-
 def get_selected_date():
-    selected_date = cal.get_date()
-    date_label.config(text=f"Selected Date: {selected_date}")
+    year = str(year_picker.get())
+    month = month_picker.get()
+    mon = str(months.index(month)+1)
+    day = str(day_picker.get())
+    date = year+"-"+mon+"-"+day
+    date_label.config(text=f"Selected Date: {date}")
+
+def get_psd():
+    # Define the characters you want to include in the mixture
+    characters = string.ascii_letters + string.digits  # includes letters (both cases) and digits
+    # Set the length of the random mixture
+    mixture_length = 10  # Change this to your desired length
+    # Generate the random mixture
+    random_mixture = ''.join(random.choice(characters) for _ in range(mixture_length))
+    print(random_mixture)
+    return random_mixture
+
+def insert_data():
+    uname = username.get()
+    uemail = useremail.get()
+    nplate = numberplate.get()
+    uphone = userphone.get()
+    uaddress = useraddress.get()
+    ublood = userbloodgroup.get()
+    year = str(year_picker.get())
+    month = month_picker.get()
+    mon = str(months.index(month)+1)
+    day = str(day_picker.get())
+    date = year+"-"+mon+"-"+day
+    psd = get_psd()
+    # date_label.config(text=f"Selected Date: {date}")
+
+    s = "INSERT INTO users (name, email,password, numberplate, phone, dob, bloodgroup, address) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+    values = (uname, uemail,psd, nplate, uphone, date, ublood, uaddress) 
+
+    try:
+        cur.execute(s, values)
+        mydb.commit()
+        print("Data inserted successfully!")
+        messagebox.showinfo("Alert", "Sign Up Successfull !")
+        username.delete(0, END)
+        userbloodgroup.delete(0, END)
+        userphone.delete(0, END)
+        numberplate.delete(0, END)
+        useremail.delete(0, END)
+        useraddress.delete(0, END)
+        year_picker.set(current_year)
+        month_picker.set('January')
+        day_picker.set('1')
 
 
+    except Exception as e:
+        mydb.rollback()  # Rollback the transaction if there's an error
+        print(f"Error inserting data: {str(e)}")
+        messagebox.showinfo("Alert", "Sign Up Un Successfull !")
 
 #GUI
 root=Tk()
@@ -50,14 +103,14 @@ root.title('Sign Up - ADMIN')
 bgImage = ImageTk.PhotoImage(file='bg/laptop_bg_try.png')
 bglabel = Label(root, image=bgImage)
 bglabel.place(x=0, y=0)
-heading = Label(root, text='Sign Up - ADMIN', font=('Microsoft Yahei UI Light', 23,'bold'), bg='white', fg='dark orange')
+heading = Label(root, text='Sign Up By ADMIN', font=('Microsoft Yahei UI Light', 23,'bold'), bg='white', fg='dark orange')
 heading.place(x=220, y=90)
 
-userlabel = Label(root, text='User Name', font=('Microsoft Yahei UI Light', 13,'bold'),bg='orange', fg='white')
+userlabel = Label(root, text='Name', font=('Microsoft Yahei UI Light', 13,'bold'),bg='orange', fg='white')
 userlabel.place(x=100, y=200)
 username = Entry(root, width=30, font=('Microsoft Yahei UI Light', 11,'bold'),bd=0, fg='dark orange')
 username.place(x=100, y=240)
-username.insert(0, 'Username')
+username.insert(0, 'Name')
 username.bind('<FocusIn>', on_username_enter)
 
 emaillabel = Label(root, text='Email', font=('Microsoft Yahei UI Light', 13,'bold'),bg='orange', fg='white')
@@ -98,23 +151,35 @@ userbloodgroup.bind('<FocusIn>', on_userbloodgroup_enter)
 doblabel = Label(root, text='Date of Birth', font=('Microsoft Yahei UI Light', 13,'bold'),bg='orange', fg='white')
 doblabel.place(x=500, y=280) 
 # Create a Calendar widget
-current_year = datetime.now().year - 25
-
-cal = Calendar(root, year=2000, month=1, day=1, date_pattern="yyyy-mm-dd")
-cal.destroy()
-# Button to get the selected date
-get_date_button = tk.Button(root, text="Select This Date", command=get_selected_date)
-get_date_button.place(x=500, y=510)
-# Label to display the selected date
-date_label = tk.Label(root, text="No Date Chosen Yet")
-date_label.place(x=500, y=550)
+current_year = datetime.now().year 
 
 years = [str(year) for year in range(current_year - 65, current_year + 1)]
 year_picker = ttk.Combobox(root, values=years)
 year_picker.set(current_year)
-year_picker.pack()
-year_picker.bind("<<ComboboxSelected>>", update_calendar_year)
+year_picker.place(x=500, y=320)
+# year_picker.bind("<<ComboboxSelected>>", on_userbloodgroup_enter)
+
+month_picker = ttk.Combobox(root, values=months)
+month_picker.set('January')
+month_picker.place(x=650, y=320)
+# month_picker.bind("<<ComboboxSelected>>", on_userbloodgroup_enter)
+
+days = [str(day) for day in range(1, 33)]
+day_picker = ttk.Combobox(root, values=days)
+day_picker.set('1')
+day_picker.place(x=800, y=320)
+# day_picker.bind("<<ComboboxSelected>>", on_userbloodgroup_enter)
 
 
+# Button to get the selected date
+get_date_button = tk.Button(root, text="Select This Date", command=get_selected_date)
+get_date_button.place(x=500, y=360)
+# Label to display the selected date
+date_label = tk.Label(root, text="No Date Chosen Yet")
+date_label.place(x=600, y=360)
+
+# Button to insert the data
+insert_button = tk.Button(root, text="Sign UP", command=insert_data)
+insert_button.place(x=500, y=400)
 
 root.mainloop()
