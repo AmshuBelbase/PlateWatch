@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e3ba8f"
+    android:background="#FA642C"
     tools:context=".SplashScreen">
 
     <ImageView
@@ -18,11 +18,12 @@
         android:id="@+id/appname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LogIn Page"
-        android:textColor="#000"
+        android:text="Plate Watch"
+        android:textColor="#445097"
         android:layout_below="@+id/appsplash"
         android:textSize="25dp"
         android:textStyle="bold"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         />
 </RelativeLayout>
