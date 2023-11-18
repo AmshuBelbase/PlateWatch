@@ -1,7 +1,9 @@
 package con_jd;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
- 
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 //import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,9 +13,10 @@ public class login {
 	private static Connection connection;
 	private static Statement statement;
 	public static void main(String[] args) { 
-		con();
+		con();  
 		LogSign();  
     }
+	
 	
 	public static void con() {
 		String records = "";
@@ -56,8 +59,8 @@ public class login {
         // Add panel to frame
         frame.add(panel);
          
-        frame.revalidate();
-        frame.repaint();
+//        frame.revalidate();
+//        frame.repaint();
          
         frame.setVisible(true);
 
@@ -265,21 +268,33 @@ public class login {
         });
     }
     
-    private static void Main_Page(String email) {
+    private static void Main_Page(String email) { 
     	JFrame frame = new JFrame("Plate Watch - Main");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 400);
         // Center the frame on the screen
-        frame.setLocationRelativeTo(null); 
+        frame.setLocationRelativeTo(null);  
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenuItem fineMenu = new JMenuItem("My Fines");
+        JMenuItem infoMenu = new JMenuItem("My Information"); 
+
+        menuBar.add(fineMenu);
+        menuBar.add(infoMenu);
+
+        frame.setJMenuBar(menuBar);
+        
+     
+        JPanel contentPanel = new JPanel();
+        frame.add(contentPanel, BorderLayout.PAGE_START);
         
         DefaultTableModel model = new DefaultTableModel();
 		JTable table = new JTable();
     	table.setModel(model);
         JScrollPane scrollPane = new JScrollPane(table); 
-        
-    	frame.add(scrollPane);
+        contentPanel.add(scrollPane);  
 		model.addColumn("ID");
-		model.addColumn("Name");
+//		model.addColumn("Name"); 
 		model.addColumn("Type");
 		model.addColumn("Amount");
 		model.addColumn("Date");
@@ -291,16 +306,16 @@ public class login {
 	    		model.setRowCount(0);
 	    		ResultSet rs = statement.executeQuery(query);
 	    		// add other column names
-	    		int id = 1;
+	    		int id = 1;  
 	    		while (rs.next()) { 
-	    		  String name = rs.getString("name");
+//	    		  String name = rs.getString("name");
 	    		  String type = rs.getString("type");
-	    		  String amount = rs.getString("amount");
+	    		  String amount = rs.getString("amount");  
 	    		  String date = rs.getString("date");  
-	    		  Object[] row = {id, name, type, amount, date}; 
-	    		  model.addRow(row);
+	    		  Object[] row = {id, type, amount, date}; 
+	    		  model.addRow(row); 
 	    		  id++;
-	    		} 
+	    		} 	    		
 	    	}
 	    	catch (SQLException exception){
 	    		JOptionPane.showMessageDialog(null, "Data Loading Failed !", "Could not Load Records !", JOptionPane.WARNING_MESSAGE);
@@ -312,7 +327,84 @@ public class login {
 	        } 
 		}); 
 	    timer.start();
+	    
+	    
+	    JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 1, 20, 20)); // Use null layout for absolute positioning
+
+        JLabel usernameLabel = new JLabel("User Name"); 
+        
+        JLabel emailLabel = new JLabel("Email"); 
+
+        JLabel numberPlateLabel = new JLabel("Number Plate");  
+
+        JLabel phoneLabel = new JLabel("Phone Number");
+
+        JLabel addLabel = new JLabel("Address");
+        
+        String que = "SELECT * FROM users WHERE email = '" + email + "'";
+        try { 
+    		statement = connection.createStatement(); 
+    		model.setRowCount(0);
+    		ResultSet rs = statement.executeQuery(que);
+    		// add other column names 
+    		while (rs.next()) {  
+    		  String name = rs.getString("name");
+    		  usernameLabel.setText("Username: " + name); 
+    		  emailLabel.setText("Email: " + email);
+    		  String numberplate = rs.getString("numberplate"); 
+    		  numberPlateLabel.setText("Number Plate: " + numberplate);
+    		  String phone = rs.getString("phone"); 
+    		  phoneLabel.setText("Phone Number: " + phone);
+    		  String address = rs.getString("address"); 
+    		  addLabel.setText("Address: " + address);
+    		} 	    		
+    	}
+    	catch (SQLException exception){
+    		JOptionPane.showMessageDialog(null, "Data Loading Failed !", "Could not Load Records !", JOptionPane.WARNING_MESSAGE);
+            System.out.println("error : "+exception.toString());
+        } 
+        catch (Exception ex){
+        	JOptionPane.showMessageDialog(null, "Data Loading Failed !", "Could not Load Records !", JOptionPane.WARNING_MESSAGE);
+        	System.out.println("#####"+ex.toString());
+        } 
+
+        
+        panel.add(usernameLabel);// Add components to the panel 
+        panel.add(emailLabel); 
+        panel.add(phoneLabel); 
+        panel.add(numberPlateLabel);
+        panel.add(addLabel); 
+	    
+	    
+	    
+	    
+	    
+	 // Add action listeners to the menu items
+	    fineMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	contentPanel.removeAll();
+        	    contentPanel.add(scrollPane); 
+        	    contentPanel.revalidate();
+        	    contentPanel.repaint();
+            }
+        });
+
+	    infoMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { 
+            	contentPanel.removeAll();
+        	    contentPanel.add(panel);
+        	    contentPanel.revalidate();
+        	    contentPanel.repaint();
+            }
+        });
+	    
+	    
     	frame.setVisible(true); 
     } 
+ 
+
 }
  
