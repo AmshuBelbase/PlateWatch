@@ -1,0 +1,64 @@
+class MyThread1 extends Thread {
+    @Override
+    public void run() {
+        int i = 0;
+        Thread t = Thread.currentThread();
+        while (i < 50) {
+            if(i>10) {
+            	t.setPriority(3);
+            }
+            if(i>20) {
+            	t.setPriority(2);
+            }
+            if(i>45) {
+            	t.setPriority(1);
+            }
+        	System.out.println("T1 : " + i + " P1 : " + t.getPriority()); 
+            i++;
+        }
+    }
+}
+
+class MyThread2 extends Thread {
+    @Override
+    public void run() {
+        int i = 0;
+        Thread t = Thread.currentThread();
+        while (i < 50) {
+            if(i>10) {
+            	t.setPriority(3);
+            }
+            if(i>20) {
+            	t.setPriority(2);
+            }
+            if(i>45) {
+            	t.setPriority(1);
+            }
+            System.out.println("T2 : " + i + " P2 : " + t.getPriority());
+            i++;
+        }
+    }
+}
+
+public class ThreadConcept {
+    public static void main(String[] args) {
+        MyThread1 t1 = new MyThread1();
+        MyThread2 t2 = new MyThread2();
+        t1.start();
+		System.out.println(t2.isAlive());
+        t2.start();
+		System.out.println(t1.isAlive());
+        Thread t = Thread.currentThread();
+        t.setName("Amshu");
+		System.out.println(t1.isAlive());
+        try {
+			Thread.sleep(1000);
+			t1.join();
+        	t2.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println(t.getName());
+    }
+}

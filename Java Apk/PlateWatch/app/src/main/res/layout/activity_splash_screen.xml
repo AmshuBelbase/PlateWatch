@@ -4,13 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff7f27"
+    android:background="@drawable/android_bg_splash1"
     tools:context=".SplashScreen">
 
-    <ImageView
-        android:id="@+id/appsplash"
-        android:layout_width="317dp"
-        android:layout_height="307dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/platewatch_mod" />
 </RelativeLayout>

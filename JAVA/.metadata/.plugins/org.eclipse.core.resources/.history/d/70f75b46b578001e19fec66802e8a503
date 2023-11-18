@@ -1,0 +1,14 @@
+import java.sql.*;
+public class JDBC_SQL {
+	public static void main(String[] args) {
+		Connection con = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/myDb", "root", "admin");
+			Statement st = con.createStatement();
+		}
+		catch(Exception e) {
+			
+		}
+	}
+}

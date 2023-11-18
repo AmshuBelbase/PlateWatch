@@ -1,0 +1,82 @@
+class MyThread3 implements Runnable{
+	public void run() {
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		Thread t = Thread.currentThread();
+		System.out.println(t);
+	}
+}
+class MyThread4 implements Runnable{
+	public void run() {
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		Thread t = Thread.currentThread();
+		System.out.println(t);
+	}
+}
+public class RunnableThreadingConcept {
+	public static void main(String[] args) {
+		MyThread3 bullet1 = new MyThread3();
+		MyThread4 bullet2 = new MyThread4();
+		Thread gun1 = new Thread(bullet1);
+		Thread gun2 = new Thread(bullet2);
+		gun1.start();
+		gun2.start();
+		try {
+			gun1.join();
+			gun2.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

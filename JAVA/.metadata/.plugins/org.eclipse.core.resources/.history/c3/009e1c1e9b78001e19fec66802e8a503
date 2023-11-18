@@ -1,0 +1,37 @@
+class MyThread1 extends Thread {
+    @Override
+    public void run() {
+        int i = 0;
+        while (i < 200) {
+            System.out.println("Hello!");
+            i++;
+        }
+    }
+}
+
+class MyThread2 extends Thread {
+    @Override
+    public void run() {
+        int i = 0;
+        while (i < 200) {
+            System.out.println("I am Fine!");
+            i++;
+        }
+    }
+}
+
+public class ThreadConcept {
+    public static void main(String[] args) {
+        MyThread1 t1 = new MyThread1();
+        MyThread2 t2 = new MyThread2();
+        t1.start();
+        t2.start();
+        while(true)
+        	System.out.println(isAlive(t1));
+    }
+
+	private static char[] isAlive(MyThread1 t1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

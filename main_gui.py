@@ -13,7 +13,9 @@ today = date.today()
 
 # Print today's date 
 
-mydb = mysql.connector.connect(host='localhost', user='root', password='',database='epiz_32083127_traffic')
+# mydb = mysql.connector.connect(host='localhost', user='root', password='',database='epiz_32083127_traffic')
+mydb = mysql.connector.connect(host='localhost', user='root', password='root',database='epiz_32083127_traffic', port='3307', auth_plugin='mysql_native_password')
+
 cur =  mydb.cursor()
 harcascade = "model\haarcascade_russian_plate_number.xml"
 min_area = 500

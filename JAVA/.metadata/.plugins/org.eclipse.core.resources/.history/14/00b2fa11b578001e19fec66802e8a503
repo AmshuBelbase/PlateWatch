@@ -1,0 +1,12 @@
+import java.sql.*;
+public class JDBC_SQL {
+	public static void main(String[] args) {
+		Connection con = null;
+		try {
+			Class.ForName("com.mysql.jdbc.Driver");
+		}
+		catch(Exception e) {
+			
+		}
+	}
+}

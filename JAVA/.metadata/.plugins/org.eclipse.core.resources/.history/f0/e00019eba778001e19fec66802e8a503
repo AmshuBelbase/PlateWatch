@@ -1,0 +1,49 @@
+class MyThread1 extends Thread {
+    @Override
+    public void run() {
+        int i = 0;
+        while (i < 200) {
+            System.out.println("Hello!");
+            i++;
+        }
+    }
+}
+
+class MyThread2 extends Thread {
+    @Override
+    public void run() {
+        int i = 0;
+        while (i < 200) {
+            System.out.println("I am Fine!");
+            i++;
+        }
+    }
+}
+
+public class ThreadConcept {
+    public static void main(String[] args) {
+        MyThread1 t1 = new MyThread1();
+        MyThread2 t2 = new MyThread2();
+        t1.start();
+		System.out.println(t2.isAlive());
+        t2.start();
+		System.out.println(t1.isAlive());
+        Thread t = Thread.currentThread();
+        t.setName("Amshu");
+		System.out.println(t1.isAlive());
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+        	t1.join();
+        	t2.join();
+        }
+        catch(InterruptedException e) {
+        	System.out.println("Error");
+        }
+        System.out.println(t.getName());
+    }
+}

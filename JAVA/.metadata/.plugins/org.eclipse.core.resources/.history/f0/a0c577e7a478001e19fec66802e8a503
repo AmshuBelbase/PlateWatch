@@ -1,0 +1,15 @@
+class MyThread1 implements Runnable{
+	public void run() {
+		
+	}
+}
+class MyThread2 implements Runnable{
+	public void run() {
+		
+	}
+}
+public class RunnableThreadingConcept {
+	public static void main(String[] args) {
+		
+	}
+}

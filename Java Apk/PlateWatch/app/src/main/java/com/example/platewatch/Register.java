@@ -61,6 +61,22 @@ public class Register extends AppCompatActivity {
                     return;
                 }
                 progressBar.setVisibility(view.VISIBLE);
+                // This code is for establishing connection with MySQL
+                // database and retrieving data
+                // from db Java Database connectivity
+
+                /*
+                 *1. import --->java.sql
+                 *2. load and register the driver ---> com.jdbc.
+                 *3. create connection
+                 *4. create a statement
+                 *5. execute the query
+                 *6. process the results
+                 *7. close
+                 */
+
+
+
             }
         });
     }

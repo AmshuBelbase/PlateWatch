@@ -1,0 +1,71 @@
+class MyThread3 implements Runnable{
+	public void run() {
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+		System.out.println("MyThread3");
+	}
+}
+class MyThread4 implements Runnable{
+	public void run() {
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+		System.out.println("MyThread4");
+	}
+}
+public class RunnableThreadingConcept {
+	public static void main(String[] args) {
+		MyThread3 bullet1 = new MyThread3();
+		MyThread4 bullet2 = new MyThread4();
+		Thread gun1 = new Thread(bullet1);
+		Thread gun2 = new Thread(bullet2);
+		gun1.start();
+		gun2.start();
+	}
+}

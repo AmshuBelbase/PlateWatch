@@ -11,7 +11,8 @@ today = date.today()
 
 # Print today's date 
 
-mydb = mysql.connector.connect(host='localhost', user='root', password='',database='epiz_32083127_traffic')
+mydb = mysql.connector.connect(host='localhost', user='root', password='root',database='epiz_32083127_traffic', port='3307', auth_plugin='mysql_native_password')
+
 cur =  mydb.cursor()
 
 harcascade = "model\haarcascade_russian_plate_number.xml"
@@ -157,15 +158,15 @@ def operate(transaction_type):
                 # print(rec[1])
                 s = "INSERT INTO fines (name, email,uid, numberplate, description, type, amount, date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
                 values = (rec[1], rec[2],rec[0], rec[5], new_file_name, tt, f, today) 
-            try:
-                cur.execute(s, values)
-                mydb.commit()
-                print("Data inserted successfully!")
-                # messagebox.showinfo("Alert", "Rec !") 
-            except Exception as e:
-                mydb.rollback()  # Rollback the transaction if there's an error
-                print(f"Error inserting data: {str(e)}")
-                # messagebox.showinfo("Alert", "Sign Up Un Successfull !")
+                try:
+                    cur.execute(s, values)
+                    mydb.commit()
+                    print("Data inserted successfully!")
+                    # messagebox.showinfo("Alert", "Rec !") 
+                except Exception as e:
+                    mydb.rollback()  # Rollback the transaction if there's an error
+                    print(f"Error inserting data: {str(e)}")
+                    # messagebox.showinfo("Alert", "Sign Up Un Successfull !")
             # move_file(transaction_type, new_prefix, counting)
     else:
         print("No Vehicle Violated this Rule.")
